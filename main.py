@@ -18,6 +18,8 @@ while desea_salir == False:
             fun.agregar_producto('Agregar Producto', '+')
         case '2':
             fun.mostrar_productos('Mostrar Productos', '+')
+        case '3':
+            
         case _:
             print('\nNo existe la opcion ingresada.')
     
