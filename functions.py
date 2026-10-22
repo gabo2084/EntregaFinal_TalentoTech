@@ -149,28 +149,48 @@ stock = [
 producto = {}
 
 def cabecera(titulo, simbolo):
+
     longitud_titulo = len(titulo)
+    
     if longitud_titulo % 2 == 0:
+
         lineas_extremas = simbolo * 100
         linea_titulo = f'{simbolo * ((99 - longitud_titulo)//2)} {titulo} {simbolo * ((99 - longitud_titulo)//2)}'
-        lineas_extremas = simbolo * 100
+        lineas_extremas
+
     else:
+
         lineas_extremas = simbolo * 101
         linea_titulo = f'{simbolo * ((100 - longitud_titulo)//2)} {titulo} {simbolo * ((100 - longitud_titulo)//2)}'
-        lineas_extremas = simbolo * 101
+        lineas_extremas
 
     print(f'\n{lineas_extremas}')
     print(linea_titulo)
     print(f'{lineas_extremas}\n')
 
+
 def menu_opciones():
-    print('1. Agregar producto')
-    print('2. Mostrar productos')
-    print('3. Actualizar producto')
-    print('4. Eliminar producto')
-    print('5. Buscar producto')
-    print('6. Reporte de productos')
-    print('0. Salir')
+
+    print('''
+        1. Agregar producto
+        2. Mostrar productos
+        3. Actualizar producto
+        4. Eliminar producto
+        5. Buscar producto
+        6. Reporte de productos
+        0. Salir
+    ''')
+
+def menu_busqueda():
+
+    print('''
+        1. Nombre
+        2. Descripcion
+        3. Cantidad
+        4. Precio
+        5. Categoria
+        0. Terminar
+    ''')
 
 
 def pantalla_principal(titulo, simbolo):
@@ -178,141 +198,116 @@ def pantalla_principal(titulo, simbolo):
     menu_opciones()
 
 
-def ingresar_id():
+def ingresar_dato(dato_clave):
+
+    dato_verificado = False
+
+    while dato_verificado == False:
+
+        if dato_clave.lower() in ('id', 'cantidad', 'precio'):
+
+            dato_valor = input(f'\nIngresar {dato_clave.upper()} del producto: ').strip()
+            
+            if not dato_valor or not dato_valor.isnumeric() or int(dato_valor) <= 0:
+
+                print(f'\n{dato_valor} no puede estar vacio. Debe ser un numero y mayor a cero.')
+                continue
     
-    id_verificado = False
-
-    while id_verificado == False:
+            dato_verificado = True
     
-        verificar_id = input('\nIngrese el ID del producto: ').strip()
+            return dato_valor
+        
+        elif dato_clave.lower() in ('nombre', 'categoria', 'descripcion'):
 
-        if not verificar_id or not verificar_id.isnumeric() or int(verificar_id) <= 0:
-            print('\nEl Id no puede estar vacio. Debe ser un numero y mayor a cero.')
-            continue
+            dato_valor = input(f'\nIngresar {dato_clave.upper()} del producto: ').strip().title()
 
-        id_verificado = True
+            if not dato_valor or dato_valor.isnumeric():
 
-        return verificar_id
+                print(f'\n{dato_valor} no debe estar vacio o no ser un numero.')
+                continue
 
+            dato_verificado = True
 
-def ingresar_nombre():
-
-    nombre_verificado = False
-
-    while nombre_verificado == False:
-
-        verificar_nombre = input('\nIngrese el nombre del producto: ').strip().title()
-
-        if not verificar_nombre or verificar_nombre.isnumeric():
-            print('\nEl nombre no debe estar vacio o no ser un numero.')
-            continue
-
-        nombre_verificado = True
-
-        return verificar_nombre
+            return dato_valor
 
 
-def ingresar_descripcion():
+def vista_producto(producto):
+    
+    for clave, valor in producto.items():
 
-    descripcion_verificada = False
+        if clave == 'Precio':
+            print(f'\n{clave}: $ {valor}')
+        else:
+            print(f'\n{clave}: {valor}')
 
-    while descripcion_verificada == False:
-
-        verificar_descripcion = input('\nIngrese la descripcion del producto: ').strip().capitalize()
-
-        if not verificar_descripcion or verificar_descripcion.isnumeric():
-            print('\nLa descripcion no debe estar vacia o ser un numero.')
-            continue
-
-        descripcion_verificada = True
-
-        return verificar_descripcion
+    print(f'{'_' * 100}')
 
 
-def ingresar_cantidad():
+def solicitar_clave_valor():
 
-    cantidad_verificada = False
+    criterio = input('Buscar por (id/nombre/categoria): ')
 
-    while cantidad_verificada == False:
-
-        verificar_cantidad = input('\nIngrese la cantidad del producto: ').strip()
-
-        if not verificar_cantidad or not verificar_cantidad.isnumeric() or int(verificar_cantidad) <= 0:
-            print('\nLa cantidad no tiene que estar vacia. Debe ser un numero y mayor a cero.')
-            continue
-
-        cantidad_verificada = True
-
-        return int(verificar_cantidad)
+    match criterio:
+        case 'id':
+            valor = input('Ingrese el ID: ')
+        case 'nombre':
+            valor = input('Ingrese el nombre del producto: ')
+        case 'categoria':
+            valor = input('Ingrese la categoria del producto')
 
 
-def ingresar_precio():
 
-    precio_verificado = False
+def buscar_producto(clave, valor):
 
-    while precio_verificado == False:
+    for producto in stock:
 
-        verificar_precio = input('\nIngrese el precio del producto: ').strip()
+        if producto.get(clave) == valor:
+            return producto
 
-        if not verificar_precio or not verificar_precio.isnumeric() or int(verificar_precio) <= 0:
-            print('\nEl precio no tiene que estar vacio. Debe ser un numero y mayor a cero.')
-            continue
-
-        precio_verificado = True
-
-        return float(verificar_precio)
+    return None
 
 
-def ingresar_categoria():
+def agregar_producto():
 
-    categoria_verificada = False
-
-    while categoria_verificada == False:
-
-        verificar_categoria = input('\nIngrese la categoria del producto: ').strip().title()
-
-        if not verificar_categoria or verificar_categoria.isnumeric():
-            print('\nLa categoria no debe estar vacia o no ser un numero.')
-            continue
-
-        categoria_verificada = True
-
-        return verificar_categoria
-
-
-def agregar_producto(titulo, simbolo):
-
-    cabecera(titulo, simbolo)
+    cabecera('Agregar Producto', '+')
 
     producto = {
-        'Id': ingresar_id(),
-        'Nombre': ingresar_nombre(),
-        'Descripcion': ingresar_descripcion(),
-        'Cantidad': ingresar_cantidad(),
-        'Precio': ingresar_precio(),
-        'Categoria': ingresar_categoria()
+        'Id': ingresar_dato('id'),
+        'Nombre': ingresar_dato('nombre'),
+        'Descripcion': ingresar_dato('descripcion').capitalize(),
+        'Cantidad': ingresar_dato('cantidad'),
+        'Precio': ingresar_dato('precio'),
+        'Categoria': ingresar_dato('categoria')
         }
-
-    print(producto)
 
     stock.append(producto)
 
+    cabecera('Producto Agregado', '+')
 
-def mostrar_productos(titulo, simbolo):
+    vista_producto(producto)
 
-    cabecera(titulo, simbolo)
-    print(f'{'_' * 100}')
+
+def mostrar_productos():
+
+    cabecera('Mostrar Productos', '+')
 
     if not stock:
         print('No existen productos cargados en el sistema.')
     else:
         for producto in stock:
-            for clave, valor in producto.items():
-                print(f'{clave}: {valor}')
-            print(f'{'_' * 100}')
+            vista_producto(producto)
+
+
+def actualizar_producto():
+
+    cabecera('Actualizar Producto', '+')
+
+    menu_busqueda()
 
 
 
+
+    
 
 
 
