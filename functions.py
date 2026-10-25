@@ -169,7 +169,9 @@ def cabecera(titulo, simbolo):
     print(f'{lineas_extremas}\n')
 
 
-def menu_opciones():
+def pantalla_principal():
+
+    cabecera('Sistema de Gestion de Productos', '+')
 
     print('''
         1. Agregar producto
@@ -179,10 +181,17 @@ def menu_opciones():
         5. Buscar producto
         6. Reporte de productos
         0. Salir
-    ''')
-
-def menu_edicion_producto():
+        ''')
     
+    opcion = input('\nIngrese la opcion a ejecutar(1|2|3|4|5|6|0): ')
+
+    return opcion
+
+
+def pantalla_claves_producto(titulo, simbolo):
+
+    cabecera(titulo, simbolo)
+
     print('''
         1. Nombre
         2. Descripcion
@@ -191,20 +200,18 @@ def menu_edicion_producto():
         5. Categoria
         0. Salir
     ''')
+
+    opcion = input('\nIngrese su opcion(1|2|3|4|5|0): ')
+
+    if opcion in ('1', '2', '3', '4', '5', '0'):
+
+        return opcion
     
+    else:
 
+        print('\nOpcion no valida.')
+        return '0'
 
-def pantalla_principal(titulo, simbolo):
-    cabecera(titulo, simbolo)
-    menu_opciones()
-    opcion = input('\nIngrese la opcion a ejecutar(1|2|3|4|5|6|0): ')
-    return opcion
-
-def pantalla_actualizar_datos(titulo, simbolo):
-    cabecera(titulo, simbolo)
-    menu_edicion_producto()
-    opcion = input('\nIngrese la opcion a ejecutar(1|2|3|4|5|0): ')
-    return opcion
 
 def ingresar_dato(dato_clave):
 
@@ -218,7 +225,7 @@ def ingresar_dato(dato_clave):
             
             if not dato_valor or not dato_valor.isnumeric() or int(dato_valor) <= 0:
 
-                print(f'\nEl campo no puede estar vacio. Debe ser un numero y mayor a cero.')
+                print(f'\nEl campo no puede estar vacio, debe ser un numero y mayor a cero.')
                 continue
     
             dato_verificado = True
@@ -239,6 +246,14 @@ def ingresar_dato(dato_clave):
             return dato_valor
 
 
+def solicitud_datos(titulo, simbolo):
+
+    cabecera(titulo, simbolo)
+    menu_claves_producto()
+    opcion = input('\nIngrese su opcion(1|2|3|4|5|0): ')
+    return opcion
+
+
 def vista_producto(producto):
     
     for clave, valor in producto.items():
@@ -251,29 +266,20 @@ def vista_producto(producto):
     print(f'{'_' * 100}')
 
 
-def solicitar_clave_valor():
+def buscar_datos(clave, valor):
 
-    criterio = input('Buscar por (id/nombre/categoria): ')
-
-    match criterio:
-        case 'id':
-            valor = input('Ingrese el ID: ')
-        case 'nombre':
-            valor = input('Ingrese el nombre del producto: ')
-        case 'categoria':
-            valor = input('Ingrese la categoria del producto')
-
-
-
-def buscar_producto(clave, valor):
+    resultados = []
 
     for producto in stock:
 
-        if producto.get(clave) == valor:
-            return producto
+        if valor.lower() in producto[clave].lower():
 
-    return None
+            resultados.append(producto)
 
+    return resultados
+
+
+# Funciones que se usan en la pantalla principal
 
 def agregar_producto():
 
@@ -295,14 +301,14 @@ def agregar_producto():
     vista_producto(producto)
 
 
-def mostrar_productos():
+def mostrar_productos(listado_productos=stock):
 
-    cabecera('Mostrar Productos', '+')
+    cabecera('Productos en Stock', '+')
 
-    if not stock:
+    if not listado_productos:
         print('No existen productos cargados en el sistema.')
     else:
-        for producto in stock:
+        for producto in listado_productos:
             vista_producto(producto)
 
 
@@ -310,47 +316,108 @@ def actualizar_producto():
 
     cabecera('Actualizar Producto', '+')
 
-    id = int(input('\nIngrese el ID del producto a actualizar: '))
+    id = input('\nIngrese el ID del producto a actualizar: ')
 
-    for producto in stock:
+    if id.isnumeric():
 
-        if producto.get('Id') == id:
+        for producto in stock:
 
-            print('\nProducto encontrado.')
-            print(f'{'_' * 100}')
-            vista_producto(producto)
+            if producto.get('Id') == int(id):
 
-            desea_salir = False
+                print('\nProducto encontrado.')
+                print(f'{'_' * 100}')
+                vista_producto(producto)
 
-            while desea_salir == False:
-            
-                opcion = pantalla_actualizar_datos(f'Actualizacion de Producto: {producto['Nombre']}', '+')
+                desea_salir = False
 
-                match opcion:
-                    case '0':
-                        print('\nVolviendo al menu principal ...')
+                while desea_salir == False:
+                
+                    opcion = pantalla_claves_producto(f'Actualizacion de Producto: {producto['Nombre']}', '+')
+                    
+                    if not opcion.isnumeric():
                         break
-                    case '1':
-                        nombre = ingresar_dato('nombre')
-                        producto['Nombre'] = nombre
-                    case '2':
-                        descripcion = ingresar_dato('descripcion')
-                        producto['Descripcion'] = descripcion
-                    case '3':
-                        cantidad = ingresar_dato('cantidad')
-                        producto['Cantidad'] = cantidad                
-                    case '4':
-                        precio = ingresar_dato('precio')
-                        producto['Precio'] = precio
-                    case '5':
-                        categoria = ingresar_dato('categoria')
-                        producto['Categoria'] = categoria
 
-            print('\nProducto actualizado correctamente.')
-            return True
+                    match opcion:
+                        case '0':
+                            print('\nVolviendo al menu principal ...')
+                            break
+                        case '1':
+                            nombre = ingresar_dato('nombre')
+                            producto['Nombre'] = nombre
+                        case '2':
+                            descripcion = ingresar_dato('descripcion')
+                            producto['Descripcion'] = descripcion
+                        case '3':
+                            cantidad = ingresar_dato('cantidad')
+                            producto['Cantidad'] = cantidad                
+                        case '4':
+                            precio = ingresar_dato('precio')
+                            producto['Precio'] = precio
+                        case '5':
+                            categoria = ingresar_dato('categoria')
+                            producto['Categoria'] = categoria
+                        case _:
+                            print('\nProducto no encontrado.')
 
-    print('\nProducto no encontrado. Volviendo al menu principal...')
-    return False
+                    print('\nProducto actualizado correctamente.')
+                
+                return True
+
+            else:
+
+                print('\nID no encontrado. Volviendo al menu principal...')
+                return False
+    
+    else:
+
+        print('\nEl valor ingresado no es numerico. Volviendo al menu principal...')
+        return False
+
+
+def eliminar_producto():
+
+    cabecera('Eliminar Producto', '+')
+    print('Pendiente de desarrollo...')
+
+
+def buscar_productos():
+
+    desea_salir = False
+    
+    while desea_salir == False:
+    
+        opcion = pantalla_claves_producto('Busqueda de Producto', '+')
+
+        match opcion:
+            case '0':
+                print('\nVolviendo al menu principal ...')
+                break
+            case '1':
+                clave = 'Nombre'
+            case '2':
+                clave = 'Descripcion'
+            case '3':
+                clave = 'Cantidad'                
+            case '4':
+                clave = 'Precio'
+            case '5':
+                clave = 'Categoria'
+
+        valor = input(f'\nIngrese {clave.upper()} a buscar: ')
+
+        productos_encontrados = buscar_datos(clave, valor)
+
+        mostrar_productos(productos_encontrados)
+
+
+def reporte_productos():
+
+    cabecera('Reporte de Productos', '+')
+    print('Pendiente de desarrollo...')
+
+
+
+
 
 
 
