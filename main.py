@@ -6,9 +6,7 @@ opcion = ''
 
 while desea_salir == False:
     
-    fun.pantalla_principal('Sistema de Gestion de Productos', '+')
-
-    opcion = input('\nIngrese la opcion a ejecutar(1|2|3|4|5|6|0): ')
+    opcion = fun.pantalla_principal('Sistema de Gestion de Productos', '+')
 
     match opcion:
         case '0':

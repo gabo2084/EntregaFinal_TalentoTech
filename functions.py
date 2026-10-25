@@ -181,22 +181,30 @@ def menu_opciones():
         0. Salir
     ''')
 
-def menu_busqueda():
-
+def menu_edicion_producto():
+    
     print('''
         1. Nombre
         2. Descripcion
         3. Cantidad
         4. Precio
         5. Categoria
-        0. Terminar
+        0. Salir
     ''')
+    
 
 
 def pantalla_principal(titulo, simbolo):
     cabecera(titulo, simbolo)
     menu_opciones()
+    opcion = input('\nIngrese la opcion a ejecutar(1|2|3|4|5|6|0): ')
+    return opcion
 
+def pantalla_actualizar_datos(titulo, simbolo):
+    cabecera(titulo, simbolo)
+    menu_edicion_producto()
+    opcion = input('\nIngrese la opcion a ejecutar(1|2|3|4|5|0): ')
+    return opcion
 
 def ingresar_dato(dato_clave):
 
@@ -210,7 +218,7 @@ def ingresar_dato(dato_clave):
             
             if not dato_valor or not dato_valor.isnumeric() or int(dato_valor) <= 0:
 
-                print(f'\n{dato_valor} no puede estar vacio. Debe ser un numero y mayor a cero.')
+                print(f'\nEl campo no puede estar vacio. Debe ser un numero y mayor a cero.')
                 continue
     
             dato_verificado = True
@@ -219,11 +227,11 @@ def ingresar_dato(dato_clave):
         
         elif dato_clave.lower() in ('nombre', 'categoria', 'descripcion'):
 
-            dato_valor = input(f'\nIngresar {dato_clave.upper()} del producto: ').strip().title()
+            dato_valor = input(f'\nIngresar {dato_clave.upper()} del producto: ').strip()
 
             if not dato_valor or dato_valor.isnumeric():
 
-                print(f'\n{dato_valor} no debe estar vacio o no ser un numero.')
+                print(f'\nEl campo no debe estar vacio o no ser un numero.')
                 continue
 
             dato_verificado = True
@@ -272,11 +280,11 @@ def agregar_producto():
     cabecera('Agregar Producto', '+')
 
     producto = {
-        'Id': ingresar_dato('id'),
+        'Id': int(ingresar_dato('id')),
         'Nombre': ingresar_dato('nombre'),
-        'Descripcion': ingresar_dato('descripcion').capitalize(),
-        'Cantidad': ingresar_dato('cantidad'),
-        'Precio': ingresar_dato('precio'),
+        'Descripcion': ingresar_dato('descripcion'),
+        'Cantidad': int(ingresar_dato('cantidad')),
+        'Precio': float(ingresar_dato('precio')),
         'Categoria': ingresar_dato('categoria')
         }
 
@@ -302,7 +310,50 @@ def actualizar_producto():
 
     cabecera('Actualizar Producto', '+')
 
-    menu_busqueda()
+    id = int(input('\nIngrese el ID del producto a actualizar: '))
+
+    for producto in stock:
+
+        if producto.get('Id') == id:
+
+            print('\nProducto encontrado.')
+            print(f'{'_' * 100}')
+            vista_producto(producto)
+
+            desea_salir = False
+
+            while desea_salir == False:
+            
+                opcion = pantalla_actualizar_datos(f'Actualizacion de Producto: {producto['Nombre']}', '+')
+
+                match opcion:
+                    case '0':
+                        print('\nVolviendo al menu principal ...')
+                        break
+                    case '1':
+                        nombre = ingresar_dato('nombre')
+                        producto['Nombre'] = nombre
+                    case '2':
+                        descripcion = ingresar_dato('descripcion')
+                        producto['Descripcion'] = descripcion
+                    case '3':
+                        cantidad = ingresar_dato('cantidad')
+                        producto['Cantidad'] = cantidad                
+                    case '4':
+                        precio = ingresar_dato('precio')
+                        producto['Precio'] = precio
+                    case '5':
+                        categoria = ingresar_dato('categoria')
+                        producto['Categoria'] = categoria
+
+            print('\nProducto actualizado correctamente.')
+            return True
+
+    print('\nProducto no encontrado. Volviendo al menu principal...')
+    return False
+
+
+
 
 
 
