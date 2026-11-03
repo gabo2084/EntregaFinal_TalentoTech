@@ -193,11 +193,12 @@ def pantalla_claves_producto(titulo, simbolo):
     cabecera(titulo, simbolo)
 
     print('''
-        1. Nombre
-        2. Descripcion
-        3. Cantidad
-        4. Precio
-        5. Categoria
+        1. Id
+        2. Nombre
+        3. Descripcion
+        4. Cantidad
+        5. Precio
+        6. Categoria
         0. Salir
     ''')
 
@@ -272,7 +273,7 @@ def buscar_datos(clave, valor):
 
     for producto in stock:
 
-        if valor.lower() in producto[clave].lower():
+        if str(valor).lower() in str(producto[clave]).lower():
 
             resultados.append(producto)
 
@@ -342,18 +343,21 @@ def actualizar_producto():
                             print('\nVolviendo al menu principal ...')
                             break
                         case '1':
+                            id = ingresar_dato('id')
+                            producto['Id'] = id
+                        case '2':
                             nombre = ingresar_dato('nombre')
                             producto['Nombre'] = nombre
-                        case '2':
+                        case '3':
                             descripcion = ingresar_dato('descripcion')
                             producto['Descripcion'] = descripcion
-                        case '3':
+                        case '4':
                             cantidad = ingresar_dato('cantidad')
                             producto['Cantidad'] = cantidad                
-                        case '4':
+                        case '5':
                             precio = ingresar_dato('precio')
                             producto['Precio'] = precio
-                        case '5':
+                        case '6':
                             categoria = ingresar_dato('categoria')
                             producto['Categoria'] = categoria
 
@@ -389,14 +393,16 @@ def buscar_productos():
                 print('\nVolviendo al menu principal ...')
                 break
             case '1':
-                clave = 'Nombre'
+                clave = 'Id'
             case '2':
-                clave = 'Descripcion'
+                clave = 'Nombre'
             case '3':
-                clave = 'Cantidad'                
+                clave = 'Descripcion'
             case '4':
-                clave = 'Precio'
+                clave = 'Cantidad'                
             case '5':
+                clave = 'Precio'
+            case '6':
                 clave = 'Categoria'
 
         valor = input(f'\nIngrese {clave.upper()} a buscar: ')
