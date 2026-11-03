@@ -249,7 +249,7 @@ def ingresar_dato(dato_clave):
 def solicitud_datos(titulo, simbolo):
 
     cabecera(titulo, simbolo)
-    menu_claves_producto()
+    pantalla_claves_producto()
     opcion = input('\nIngrese su opcion(1|2|3|4|5|0): ')
     return opcion
 
@@ -356,21 +356,17 @@ def actualizar_producto():
                         case '5':
                             categoria = ingresar_dato('categoria')
                             producto['Categoria'] = categoria
-                        case _:
-                            print('\nProducto no encontrado.')
 
                     print('\nProducto actualizado correctamente.')
                 
                 return True
 
-            else:
-
-                print('\nID no encontrado. Volviendo al menu principal...')
-                return False
-    
+        print('\nEl ID ingresado no se encuentra en la lista de productos. Volviendo al menu principal...')
+        return False    
+                
     else:
 
-        print('\nEl valor ingresado no es numerico. Volviendo al menu principal...')
+        print('\nEl ID ingresado no es numerico. Volviendo al menu principal...')
         return False
 
 
