@@ -159,7 +159,7 @@ def cabecera(titulo, simbolo):
         lineas_extremas
 
     else:
-
+        
         lineas_extremas = simbolo * 101
         linea_titulo = f'{simbolo * ((100 - longitud_titulo)//2)} {titulo} {simbolo * ((100 - longitud_titulo)//2)}'
         lineas_extremas
@@ -192,7 +192,10 @@ def pantalla_claves_producto(titulo, simbolo):
 
     cabecera(titulo, simbolo)
 
-    print('''
+    opcion_valida = False
+
+    while opcion_valida == False:
+        print('''
         1. Id
         2. Nombre
         3. Descripcion
@@ -200,18 +203,26 @@ def pantalla_claves_producto(titulo, simbolo):
         5. Precio
         6. Categoria
         0. Salir
-    ''')
+        ''')
+        
+        opcion = input('\nIngrese la opcion a ejecutar(1|2|3|4|5|6|0): ')
 
-    opcion = input('\nIngrese su opcion(1|2|3|4|5|0): ')
-
-    if opcion in ('1', '2', '3', '4', '5', '0'):
-
-        return opcion
+        if opcion in ('1', '2', '3', '4', '5', '6', '0'):
+            opcion_valida = True
+            return opcion
     
-    else:
+        else:
 
-        print('\nOpcion no valida.')
-        return '0'
+            print('\nOpcion no valida.')
+            continue
+
+
+def solicitud_datos(titulo, simbolo):
+
+    cabecera(titulo, simbolo)
+    pantalla_claves_producto()
+    opcion = input('\nIngrese su opcion(1|2|3|4|5|0): ')
+    return opcion
 
 
 def ingresar_dato(dato_clave):
@@ -245,15 +256,7 @@ def ingresar_dato(dato_clave):
             dato_verificado = True
 
             return dato_valor
-
-
-def solicitud_datos(titulo, simbolo):
-
-    cabecera(titulo, simbolo)
-    pantalla_claves_producto()
-    opcion = input('\nIngrese su opcion(1|2|3|4|5|0): ')
-    return opcion
-
+        
 
 def vista_producto(producto):
     
@@ -265,6 +268,28 @@ def vista_producto(producto):
             print(f'\n{clave}: {valor}')
 
     print(f'{'_' * 100}')
+
+
+def mostrar_productos(listado_productos=stock):
+
+    cabecera('Productos en Stock', '+')
+
+    if not listado_productos:
+        print('No existen productos cargados en el sistema.')
+    else:
+        for producto in listado_productos:
+            vista_producto(producto)
+
+
+def buscar_producto_por_id():
+
+    id = ingresar_dato('id')
+
+    for producto in stock:
+
+        if producto.get('Id') == int(id):
+
+            return producto
 
 
 def buscar_datos(clave, valor):
@@ -302,82 +327,82 @@ def agregar_producto():
     vista_producto(producto)
 
 
-def mostrar_productos(listado_productos=stock):
-
-    cabecera('Productos en Stock', '+')
-
-    if not listado_productos:
-        print('No existen productos cargados en el sistema.')
-    else:
-        for producto in listado_productos:
-            vista_producto(producto)
-
-
 def actualizar_producto():
 
     cabecera('Actualizar Producto', '+')
 
-    id = input('\nIngrese el ID del producto a actualizar: ')
+    producto = buscar_producto_por_id()
 
-    if id.isnumeric():
-
-        for producto in stock:
-
-            if producto.get('Id') == int(id):
-
-                print('\nProducto encontrado.')
-                print(f'{'_' * 100}')
-                vista_producto(producto)
-
-                desea_salir = False
-
-                while desea_salir == False:
-                
-                    opcion = pantalla_claves_producto(f'Actualizacion de Producto: {producto['Nombre']}', '+')
-                    
-                    if not opcion.isnumeric():
-                        break
-
-                    match opcion:
-                        case '0':
-                            print('\nVolviendo al menu principal ...')
-                            break
-                        case '1':
-                            id = ingresar_dato('id')
-                            producto['Id'] = id
-                        case '2':
-                            nombre = ingresar_dato('nombre')
-                            producto['Nombre'] = nombre
-                        case '3':
-                            descripcion = ingresar_dato('descripcion')
-                            producto['Descripcion'] = descripcion
-                        case '4':
-                            cantidad = ingresar_dato('cantidad')
-                            producto['Cantidad'] = cantidad                
-                        case '5':
-                            precio = ingresar_dato('precio')
-                            producto['Precio'] = precio
-                        case '6':
-                            categoria = ingresar_dato('categoria')
-                            producto['Categoria'] = categoria
-
-                    print('\nProducto actualizado correctamente.')
-                
-                return True
-
-        print('\nEl ID ingresado no se encuentra en la lista de productos. Volviendo al menu principal...')
-        return False    
-                
+    if not producto:
+        
+        print('\nNo se encontro el producto con el ID ingresado. Volviendo al menu principal ...')
+        return False
+    
     else:
 
-        print('\nEl ID ingresado no es numerico. Volviendo al menu principal...')
-        return False
+        print('\nProducto encontrado.')
+        print(f'{'_' * 100}')
+        vista_producto(producto)
+
+        desea_salir = False
+
+        while desea_salir == False:
+        
+            opcion = pantalla_claves_producto(f'Actualizacion de Producto: {producto['Nombre']}', '+')
+            
+            if not opcion.isnumeric():
+                break
+
+            match opcion:
+                case '0':
+                    print('\nVolviendo al menu principal ...')
+                    break
+                case '1':
+                    id = ingresar_dato('id')
+                    producto['Id'] = id
+                case '2':
+                    nombre = ingresar_dato('nombre')
+                    producto['Nombre'] = nombre
+                case '3':
+                    descripcion = ingresar_dato('descripcion')
+                    producto['Descripcion'] = descripcion
+                case '4':
+                    cantidad = ingresar_dato('cantidad')
+                    producto['Cantidad'] = cantidad                
+                case '5':
+                    precio = ingresar_dato('precio')
+                    producto['Precio'] = precio
+                case '6':
+                    categoria = ingresar_dato('categoria')
+                    producto['Categoria'] = categoria
+
+            print('\nProducto actualizado correctamente.')
+        
+        return True
 
 
 def eliminar_producto():
 
     cabecera('Eliminar Producto', '+')
-    print('Pendiente de desarrollo...')
+
+    producto = buscar_producto_por_id()
+
+    if not producto:
+        print('\nNo se encontro el producto con el ID ingresado. Volviendo al menu principal ...')
+        return False
+    else:
+        print('\nProducto encontrado.')
+        print(f'{'_' * 100}')
+        vista_producto(producto)
+        confirmacion = input('\nDesea eliminar este producto? (S/N): ').strip().lower()
+
+        if confirmacion != 's':
+            print('\nOperacion cancelada. Volviendo al menu principal ...')
+            return False
+        else:        
+            stock.remove(producto)
+            print(f'\nProducto eliminado correctamente: {producto["Nombre"]}')
+            return True
 
 
 def buscar_productos():
