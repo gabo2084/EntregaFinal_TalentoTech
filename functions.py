@@ -1,3 +1,7 @@
+from colorama import init, Fore, Back, Style
+from tabulate import tabulate
+
+init(autoreset=True)
 
 stock = [
     {
@@ -79,70 +83,6 @@ stock = [
         "Cantidad": 14,
         "Precio": 65000,
         "Categoria": "Audio"
-    },
-    {
-        "Id": 11,
-        "Nombre": "Webcam Logitech C920",
-        "Descripcion": "Webcam Full HD 1080p para videoconferencias.",
-        "Cantidad": 7,
-        "Precio": 98000,
-        "Categoria": "Periféricos"
-    },
-    {
-        "Id": 12,
-        "Nombre": "Disco Externo Seagate 1TB",
-        "Descripcion": "Disco rígido portátil USB 3.0.",
-        "Cantidad": 11,
-        "Precio": 89000,
-        "Categoria": "Almacenamiento"
-    },
-    {
-        "Id": 13,
-        "Nombre": "Fuente Corsair 650W",
-        "Descripcion": "Fuente de alimentación certificada 80 Plus Bronze.",
-        "Cantidad": 9,
-        "Precio": 105000,
-        "Categoria": "Componentes"
-    },
-    {
-        "Id": 14,
-        "Nombre": "Gabinete Aerocool Bolt",
-        "Descripcion": "Gabinete ATX con panel lateral transparente.",
-        "Cantidad": 6,
-        "Precio": 82000,
-        "Categoria": "Componentes"
-    },
-    {
-        "Id": 15,
-        "Nombre": "Switch TP-Link 8 Puertos",
-        "Descripcion": "Switch de red Gigabit Ethernet.",
-        "Cantidad": 13,
-        "Precio": 42000,
-        "Categoria": "Redes"
-    },
-    {
-        "Id": 16,
-        "Nombre": "Notebook HP 250 G9",
-        "Descripcion": "Notebook con Intel Core i3, 8GB RAM y SSD de 256GB.",
-        "Cantidad": 10,
-        "Precio": 720000,
-        "Categoria": "Notebooks"
-    },
-    {
-        "Id": 17,
-        "Nombre": "Pendrive SanDisk 64GB",
-        "Descripcion": "Memoria USB 3.0 de alta velocidad.",
-        "Cantidad": 40,
-        "Precio": 12000,
-        "Categoria": "Almacenamiento"
-    },
-    {
-        "Id": 18,
-        "Nombre": "UPS APC 1200VA",
-        "Descripcion": "Sistema de alimentación ininterrumpida para PC.",
-        "Cantidad": 4,
-        "Precio": 190000,
-        "Categoria": "Energía"
     }
 ]
 
@@ -154,26 +94,27 @@ def cabecera(titulo, simbolo):
     
     if longitud_titulo % 2 == 0:
 
-        lineas_extremas = simbolo * 100
-        linea_titulo = f'{simbolo * ((99 - longitud_titulo)//2)} {titulo} {simbolo * ((99 - longitud_titulo)//2)}'
+        lineas_extremas = simbolo * 150
+        linea_titulo = f'{simbolo * ((149 - longitud_titulo)//2)} {titulo} {simbolo * ((149 - longitud_titulo)//2)}'
         lineas_extremas
 
     else:
         
-        lineas_extremas = simbolo * 101
-        linea_titulo = f'{simbolo * ((100 - longitud_titulo)//2)} {titulo} {simbolo * ((100 - longitud_titulo)//2)}'
+        lineas_extremas = simbolo * 151
+        linea_titulo = f'{simbolo * ((150 - longitud_titulo)//2)} {titulo} {simbolo * ((150 - longitud_titulo)//2)}'
         lineas_extremas
 
-    print(f'\n{lineas_extremas}')
-    print(linea_titulo)
-    print(f'{lineas_extremas}\n')
+    print()
+    print(Back.LIGHTBLUE_EX + Fore.WHITE + f'{lineas_extremas}')
+    print(Back.LIGHTBLUE_EX + Fore.WHITE + linea_titulo)
+    print(Back.LIGHTBLUE_EX + Fore.WHITE + f'{lineas_extremas}')
 
 
 def pantalla_principal():
 
-    cabecera('Sistema de Gestion de Productos', '+')
+    cabecera('Sistema de Gestion de Productos', ' ')
 
-    print('''
+    print(Fore.LIGHTYELLOW_EX + '''
         1. Agregar producto
         2. Mostrar productos
         3. Actualizar producto
@@ -183,7 +124,7 @@ def pantalla_principal():
         0. Salir
         ''')
     
-    opcion = input('\nIngrese la opcion a ejecutar(1|2|3|4|5|6|0): ')
+    opcion = input(Fore.LIGHTGREEN_EX + 'Ingrese la opcion a ejecutar(1|2|3|4|5|6|0): ')
 
     return opcion
 
@@ -195,7 +136,7 @@ def pantalla_claves_producto(titulo, simbolo):
     opcion_valida = False
 
     while opcion_valida == False:
-        print('''
+        print(Fore.LIGHTYELLOW_EX + ''''
         1. Id
         2. Nombre
         3. Descripcion
@@ -205,7 +146,7 @@ def pantalla_claves_producto(titulo, simbolo):
         0. Salir
         ''')
         
-        opcion = input('\nIngrese la opcion a ejecutar(1|2|3|4|5|6|0): ')
+        opcion = input(Fore.LIGHTGREEN_EX + 'Ingrese la opcion a ejecutar(1|2|3|4|5|6|0): ')
 
         if opcion in ('1', '2', '3', '4', '5', '6', '0'):
             opcion_valida = True
@@ -213,7 +154,7 @@ def pantalla_claves_producto(titulo, simbolo):
     
         else:
 
-            print('\nOpcion no valida.')
+            print(Fore.LIGHTRED_EX + '\nOpcion no valida.')
             continue
 
 
@@ -221,7 +162,7 @@ def solicitud_datos(titulo, simbolo):
 
     cabecera(titulo, simbolo)
     pantalla_claves_producto()
-    opcion = input('\nIngrese su opcion(1|2|3|4|5|0): ')
+    opcion = input(Fore.LIGHTGREEN_EX + '\nIngrese su opcion(1|2|3|4|5|0): ')
     return opcion
 
 
@@ -233,11 +174,11 @@ def ingresar_dato(dato_clave):
 
         if dato_clave.lower() in ('id', 'cantidad', 'precio'):
 
-            dato_valor = input(f'\nIngresar {dato_clave.upper()} del producto: ').strip()
+            dato_valor = input(Fore.LIGHTGREEN_EX + f'\nIngresar {dato_clave.upper()} del producto: ').strip()
             
             if not dato_valor or not dato_valor.isnumeric() or int(dato_valor) <= 0:
 
-                print(f'\nEl campo no puede estar vacio, debe ser un numero y mayor a cero.')
+                print(Fore.LIGHTRED_EX + f'\nEl campo no puede estar vacio, debe ser un numero y mayor a cero.')
                 continue
     
             dato_verificado = True
@@ -246,11 +187,11 @@ def ingresar_dato(dato_clave):
         
         elif dato_clave.lower() in ('nombre', 'categoria', 'descripcion'):
 
-            dato_valor = input(f'\nIngresar {dato_clave.upper()} del producto: ').strip()
+            dato_valor = input(Fore.LIGHTGREEN_EX + f'\nIngresar {dato_clave.upper()} del producto: ').strip()
 
             if not dato_valor or dato_valor.isnumeric():
 
-                print(f'\nEl campo no debe estar vacio o no ser un numero.')
+                print(Fore.LIGHTRED_EX + f'\nEl campo no debe estar vacio o no ser un numero.')
                 continue
 
             dato_verificado = True
@@ -258,32 +199,9 @@ def ingresar_dato(dato_clave):
             return dato_valor
         
 
-def vista_producto(producto):
-    
-    for clave, valor in producto.items():
-
-        if clave == 'Precio':
-            print(f'\n{clave}: $ {valor}')
-        else:
-            print(f'\n{clave}: {valor}')
-
-    print(f'{'_' * 100}')
-
-
-def mostrar_productos(listado_productos=stock):
-
-    cabecera('Productos en Stock', '+')
-
-    if not listado_productos:
-        print('No existen productos cargados en el sistema.')
-    else:
-        for producto in listado_productos:
-            vista_producto(producto)
-
-
 def buscar_producto_por_id():
 
-    id = ingresar_dato('id')
+    id = ingresar_dato('Id')
 
     for producto in stock:
 
@@ -309,7 +227,7 @@ def buscar_datos(clave, valor):
 
 def agregar_producto():
 
-    cabecera('Agregar Producto', '+')
+    cabecera('Agregar Producto', ' ')
 
     producto = {
         'Id': int(ingresar_dato('id')),
@@ -322,40 +240,47 @@ def agregar_producto():
 
     stock.append(producto)
 
-    cabecera('Producto Agregado', '+')
+    cabecera('Producto Agregado', ' ')
 
-    vista_producto(producto)
+    mostrar_productos([producto])
+
+
+def mostrar_productos(lista_productos=stock):
+
+    if not lista_productos:
+        print(Fore.LIGHTRED_EX + f'\nNo existen productos cargados en el sistema.')
+    else:
+        print(tabulate(lista_productos, headers="keys", tablefmt="fancy_grid"))
 
 
 def actualizar_producto():
 
-    cabecera('Actualizar Producto', '+')
+    cabecera('Actualizar Producto', ' ')
 
     producto = buscar_producto_por_id()
 
     if not producto:
         
-        print('\nNo se encontro el producto con el ID ingresado. Volviendo al menu principal ...')
+        print(Fore.LIGHTRED_EX + f'\nNo se encontro el producto con el ID ingresado. Volviendo al menu principal ...')
         return False
     
     else:
 
-        print('\nProducto encontrado.')
-        print(f'{'_' * 100}')
-        vista_producto(producto)
+        print(Fore.LIGHTGREEN_EX + f'\nProducto Encontrado')
+        mostrar_productos([producto])
 
         desea_salir = False
 
         while desea_salir == False:
         
-            opcion = pantalla_claves_producto(f'Actualizacion de Producto: {producto['Nombre']}', '+')
+            opcion = pantalla_claves_producto(f'Actualizacion de Producto: {producto['Nombre']}', ' ')
             
             if not opcion.isnumeric():
                 break
 
             match opcion:
                 case '0':
-                    print('\nVolviendo al menu principal ...')
+                    print(Fore.LIGHTRED_EX + f'\nVolviendo al menu principal ...')
                     break
                 case '1':
                     id = ingresar_dato('id')
@@ -376,32 +301,31 @@ def actualizar_producto():
                     categoria = ingresar_dato('categoria')
                     producto['Categoria'] = categoria
 
-            print('\nProducto actualizado correctamente.')
+            print(Fore.LIGHTGREEN_EX + f'\nProducto actualizado correctamente.')
         
         return True
 
 
 def eliminar_producto():
 
-    cabecera('Eliminar Producto', '+')
+    cabecera('Eliminar Producto', ' ')
 
     producto = buscar_producto_por_id()
 
     if not producto:
-        print('\nNo se encontro el producto con el ID ingresado. Volviendo al menu principal ...')
+        print(Fore.LIGHTRED_EX + f'\nNo se encontro el producto con el ID ingresado. Volviendo al menu principal ...')
         return False
     else:
-        print('\nProducto encontrado.')
-        print(f'{'_' * 100}')
-        vista_producto(producto)
-        confirmacion = input('\nDesea eliminar este producto? (S/N): ').strip().lower()
+        print(Fore.LIGHTGREEN_EX + '\nProducto encontrado.')
+        mostrar_productos([producto])
+        confirmacion = input(Fore.LIGHTRED_EX + '\nDesea eliminar este producto? (S/N): ').strip().lower()
 
         if confirmacion != 's':
-            print('\nOperacion cancelada. Volviendo al menu principal ...')
+            print(Fore.LIGHTRED_EX + '\nOperacion cancelada. Volviendo al menu principal ...')
             return False
         else:        
             stock.remove(producto)
-            print(f'\nProducto eliminado correctamente: {producto["Nombre"]}')
+            print(Fore.LIGHTGREEN_EX + f'\nProducto eliminado correctamente: {producto["Nombre"]}')
             return True
 
 
@@ -411,11 +335,11 @@ def buscar_productos():
     
     while desea_salir == False:
     
-        opcion = pantalla_claves_producto('Busqueda de Producto', '+')
+        opcion = pantalla_claves_producto('Busqueda de Producto', ' ')
 
         match opcion:
             case '0':
-                print('\nVolviendo al menu principal ...')
+                print(Fore.LIGHTRED_EX + f'\nVolviendo al menu principal ...')
                 break
             case '1':
                 clave = 'Id'
@@ -430,7 +354,7 @@ def buscar_productos():
             case '6':
                 clave = 'Categoria'
 
-        valor = input(f'\nIngrese {clave.upper()} a buscar: ')
+        valor = input(Fore.LIGHTGREEN_EX + f'\nIngrese {clave.upper()} a buscar: ')
 
         productos_encontrados = buscar_datos(clave, valor)
 
@@ -439,17 +363,31 @@ def buscar_productos():
 
 def reporte_productos():
 
-    cabecera('Reporte de Productos', '+')
-    print('Pendiente de desarrollo...')
+    cabecera('Reporte de Stock', ' ')
 
+    if not stock:
 
+        print(Fore.LIGHTRED_EX + f'\nNo existen productos cargados en el sistema.')
+        return False
 
+    stock_minimo = ingresar_dato('cantidad')
 
+    print(Fore.LIGHTGREEN_EX + f'\nProductos con stock menor o igual a {stock_minimo}')
 
+    encontrado = False
 
+    productos_encontrados = []
 
+    for producto in stock:        
 
+        if producto['Cantidad'] <= int(stock_minimo):        
+            productos_encontrados.append(producto)
+            encontrado = True
 
+    mostrar_productos(productos_encontrados)
+
+    if not encontrado:
+        print(Fore.LIGHTRED_EX + f'No se encontraron productos con stock menor o igual a {stock_minimo}.')
 
 
     
