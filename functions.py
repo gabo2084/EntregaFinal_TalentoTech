@@ -247,6 +247,8 @@ def agregar_producto():
 
 def mostrar_productos(lista_productos=stock):
 
+    cabecera('Listado de Productos', ' ')
+
     if not lista_productos:
         print(Fore.LIGHTRED_EX + f'\nNo existen productos cargados en el sistema.')
     else:
